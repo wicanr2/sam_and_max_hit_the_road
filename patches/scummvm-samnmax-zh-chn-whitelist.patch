@@ -1,0 +1,11 @@
+--- a/engines/scumm/charset.cpp
++++ b/engines/scumm/charset.cpp
+@@ -123,7 +123,7 @@
+ 		case Common::ZH_CHN:
+ 			if (_game.id == GID_FT || _game.id == GID_LOOM || _game.id == GID_INDY3 ||
+ 				_game.id == GID_INDY4 || _game.id == GID_MONKEY || _game.id == GID_MONKEY2 ||
+-				_game.id == GID_TENTACLE) {
++				_game.id == GID_TENTACLE || _game.id == GID_SAMNMAX) {
+ 				fontFile = "chinese_gb16x12.fnt";
+ 				numChar = 8178;
+ 			}

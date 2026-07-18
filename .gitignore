@@ -1,0 +1,17 @@
+# 版權物與本機產物，一律不入庫
+*.ROM
+*.rom
+dist-all/
+game-cd/
+game-cht/
+game-work/
+SAMNMAX.*
+samnmax.*
+monster.sou
+MONSTER.SOU
+*.zst
+__pycache__/
+*.pyc
+# 手冊掃描原圖（松崗版權物，只留本機）
+manual/
+*.jpg
