@@ -25,8 +25,8 @@ from PIL import Image, ImageDraw, ImageFont
 from cht_common import FONT_FILE_SIZE, NUM_GLYPHS
 
 DEFAULT_TTC = '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'
-GLYPH_SIZE = 12          # 12×12
-BYTES_PER_GLYPH = 24     # 每列 2 bytes × 12 列
+GLYPH_SIZE = 12          # 預設 12×12；--size 16 走 hi-res（main 依 --size 覆寫）
+BYTES_PER_GLYPH = 24     # = GLYPH_SIZE * ceil(GLYPH_SIZE/8)；main 依 --size 重算
 THRESHOLD = 128          # 二值化閾值
 
 
@@ -43,16 +43,15 @@ def render_glyph_bitmap(font, ch, y_offset=0, x_offset=0):
 def bitmap_to_bytes(bits):
     """12×12 0/1 點陣 → 24 bytes（MSB-first，每列 2 bytes）"""
     out = bytearray()
+    row_bytes = (GLYPH_SIZE + 7) // 8   # 12→2, 16→2
     for row in bits:
-        b0 = b1 = 0
-        for x in range(8):
-            if row[x]:
-                b0 |= 0x80 >> x
-        for x in range(8, 12):
-            if row[x]:
-                b1 |= 0x80 >> (x - 8)
-        out.append(b0)
-        out.append(b1)
+        for byte_i in range(row_bytes):
+            b = 0
+            for bit in range(8):
+                x = byte_i * 8 + bit
+                if x < GLYPH_SIZE and row[x]:
+                    b |= 0x80 >> bit
+            out.append(b)
     return bytes(out)
 
 
@@ -69,7 +68,12 @@ def main():
     ap.add_argument('--y-offset', type=int, default=-1, help='繪字垂直位移（px，wqy-microhei 12px 以 -1 對位最佳）')
     ap.add_argument('--x-offset', type=int, default=0, help='繪字水平位移（px）')
     ap.add_argument('--dump', metavar='字元', help='只渲染單字並印出 ASCII 點陣預覽')
+    ap.add_argument('--size', type=int, default=12, help='點陣邊長：12（原）或 16（hi-res）')
     args = ap.parse_args()
+
+    global GLYPH_SIZE, BYTES_PER_GLYPH
+    GLYPH_SIZE = args.size
+    BYTES_PER_GLYPH = GLYPH_SIZE * ((GLYPH_SIZE + 7) // 8)   # 12→24, 16→32
 
     font = ImageFont.truetype(args.font, GLYPH_SIZE)
 
@@ -84,7 +88,7 @@ def main():
     with open(args.table, 'r', encoding='utf-8') as f:
         table = json.load(f)
 
-    buf = bytearray(FONT_FILE_SIZE)
+    buf = bytearray(NUM_GLYPHS * BYTES_PER_GLYPH)
     count = 0
     for ch, ent in table['chars'].items():
         idx = ent['idx']
