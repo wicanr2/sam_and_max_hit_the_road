@@ -68,13 +68,24 @@ jobs:
             rm -rf "build-$ARCH" && cp -R "$SRC" "build-$ARCH"
             pushd "build-$ARCH" >/dev/null
             # ScummVM configure 非 autoconf:flags 只能走環境變數前綴
+            # 只留 SDL2 + 系統 zlib(universal);其餘外部庫多來自 runner 的
+            # Homebrew(只有 arm64),x86_64 弧會連結失敗 → 全部 disable。
+            # 本中文化不需這些:中文用內建點陣字型(非 freetype)、MT-32 用內建
+            # mt32emu、MONSTER.SOU 為未壓縮 VOC(不需 mp3/vorbis 等 codec)。
             $RUN /bin/bash -c "CXXFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
               CPPFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
               LDFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
               ./configure --backend=sdl --with-sdl-prefix='$PREFIX' \
                           --disable-all-engines --enable-engine=scumm \
                           --enable-release --disable-debug \
-                          --disable-eventrecorder"
+                          --disable-eventrecorder \
+                          --disable-png --disable-jpeg --disable-gif \
+                          --disable-freetype2 --disable-fribidi \
+                          --disable-vorbis --disable-tremor --disable-mad \
+                          --disable-flac --disable-faad --disable-theoradec \
+                          --disable-fluidsynth --disable-fluidlite \
+                          --disable-sndio --disable-libcurl \
+                          --disable-discord --disable-sparkle"
             echo "[$(ts)] scummvm $ARCH make"
             $RUN /bin/bash -c "make -j\$(sysctl -n hw.ncpu)"
             cp scummvm "$OUT"
