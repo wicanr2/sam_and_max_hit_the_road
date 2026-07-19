@@ -7,6 +7,13 @@
 <p align="center">一隻西裝狗、一隻沒下限的兔子，開著偷來的警車橫越美國找雪怪——<br>三十年後，讓它第一次用繁體中文開口說話。</p>
 
 <p align="center">
+  <a href="https://youtu.be/ITJVSq5koXM">
+    <img src="docs/img/video-thumb.jpg" width="600" alt="▶ 觀看繁體中文版預告片">
+  </a>
+</p>
+<p align="center"><sub>▶ <a href="https://youtu.be/ITJVSq5koXM">觀看繁體中文版預告片（YouTube）</a></sub></p>
+
+<p align="center">
   <img src="docs/img/gameplay.gif" width="600" alt="實機中文遊玩畫面">
 </p>
 <p align="center"><sub>實機中文遊玩：對白、選項、物品欄全繁體，真機驗證無撞碼。</sub></p>
