@@ -177,6 +177,8 @@
 
 **線上懷舊：<https://wicanr2.github.io/sam_and_max_hit_the_road/>**
 
+**預告片：[▶ 在 YouTube 觀看繁體中文版預告片](https://youtu.be/ITJVSq5koXM)**
+
 遊戲叫你翻到第 N 頁，你就在這頁選第 N 頁；山姆與麥斯該穿的服裝、配件、頭飾會標出來，照著在遊戲裡穿好、按紅色大按鈕即可。全部用原創手繪 SVG，資料出自上一節的反組譯還原（[`docs/copy-protection-answers.md`](docs/copy-protection-answers.md)）。
 
 > 部署提醒：需在 repo Settings → Pages 指定由 `docs/` 發佈後生效。
