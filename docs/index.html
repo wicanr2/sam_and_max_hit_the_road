@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>妙探闖通關 · 防拷紙娃娃線上懷舊版</title>
+<style>
+  :root{
+    --paper:#f4e8cf; --paper2:#e9d8b4; --ink:#2b2317; --ink2:#5a4a2e;
+    --red:#c8302b; --red-d:#96201c; --blue:#2f6f8f; --gold:#c99a3b;
+    --line:#b89b63; --shadow:rgba(60,40,10,.28);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 10%,#f8efd8 0,transparent 45%),
+      radial-gradient(circle at 85% 90%,#efe0bf 0,transparent 50%),
+      var(--paper);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:26px 20px 70px}
+
+  /* ---- header ---- */
+  header{text-align:center;padding:14px 10px 6px}
+  .kicker{
+    display:inline-block;font-size:.78rem;letter-spacing:.28em;
+    color:var(--red-d);border:1.5px solid var(--red-d);
+    padding:3px 12px;border-radius:2px;background:#fff6e6;
+    transform:rotate(-1.2deg);margin-bottom:14px;font-weight:700;
+  }
+  h1{
+    font-size:clamp(1.7rem,5vw,2.7rem);margin:.1em 0 .15em;line-height:1.2;
+    text-shadow:2px 2px 0 var(--paper2),3px 3px 0 var(--shadow);
+  }
+  h1 small{display:block;font-size:.42em;color:var(--ink2);letter-spacing:.05em;margin-top:.4em;font-weight:600}
+  .sub{max-width:660px;margin:14px auto 0;color:var(--ink2);font-size:.98rem}
+
+  /* ---- panels ---- */
+  .panel{
+    background:linear-gradient(#fbf2dc,#f1e2c0);
+    border:1.5px solid var(--line);border-radius:8px;
+    box-shadow:0 3px 0 var(--line),0 10px 24px -12px var(--shadow);
+    padding:22px 22px 26px;margin:26px 0;
+  }
+  .panel h2{
+    font-size:1.15rem;margin:0 0 4px;display:flex;align-items:center;gap:9px;
+  }
+  .panel h2 .dot{width:11px;height:11px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px #fff6e6,0 0 0 4px var(--red-d)}
+  .panel .lead{color:var(--ink2);font-size:.92rem;margin:2px 0 16px}
+
+  /* ---- page selector ---- */
+  .pages{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:6px}
+  .pgbtn{
+    font:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;
+    width:46px;height:46px;border-radius:8px;border:1.5px solid var(--line);
+    background:#fbf3dd;color:var(--ink2);transition:.13s;
+    box-shadow:0 2px 0 var(--line);
+  }
+  .pgbtn:hover{transform:translateY(-2px);color:var(--ink)}
+  .pgbtn[aria-selected="true"]{
+    background:var(--red);color:#fff;border-color:var(--red-d);
+    box-shadow:0 2px 0 var(--red-d),0 0 0 3px #fff6e6;
+  }
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin:16px 0 4px}
+  .toggle{display:inline-flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink2);cursor:pointer;user-select:none}
+  .toggle input{width:16px;height:16px;accent-color:var(--red)}
+  .prompt{
+    text-align:center;font-size:1.05rem;margin:14px 0 2px;color:var(--ink);
+    min-height:1.7em;
+  }
+  .prompt b{color:var(--red-d)}
+
+  /* ---- dolls ---- */
+  .stage{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:18px}
+  @media(max-width:640px){.stage{grid-template-columns:1fr}}
+  .doll{
+    background:#fffaec;border:1.5px dashed var(--line);border-radius:10px;
+    padding:16px 14px 18px;text-align:center;position:relative;
+  }
+  .doll .who{font-weight:800;font-size:1.05rem;margin-bottom:2px}
+  .doll .who span{font-size:.72em;color:var(--ink2);font-weight:600}
+  .figure{width:150px;height:180px;margin:6px auto 10px;display:block}
+  .parts{display:flex;flex-direction:column;gap:7px;margin-top:6px;text-align:left}
+  .chip{
+    display:flex;align-items:center;gap:10px;background:#f6ead0;
+    border:1px solid var(--line);border-radius:7px;padding:6px 9px;
+  }
+  .chip .ic{width:38px;height:38px;flex:0 0 38px;background:#fffaec;border-radius:6px;border:1px solid #e3cf9f}
+  .chip .tx{font-size:.86rem;line-height:1.35}
+  .chip .tx b{font-weight:700}
+  .chip .tx .en{color:var(--ink2);font-size:.8em}
+  .chip .slot{margin-left:auto;font-size:.68rem;color:#fff;background:var(--ink2);border-radius:10px;padding:1px 8px;white-space:nowrap;align-self:flex-start}
+  .hidden-ans .parts{filter:blur(7px);opacity:.55;pointer-events:none;transition:.2s}
+  .doll.reveal .parts{filter:none;opacity:1}
+  .revealbtn{
+    margin-top:10px;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;
+    border:none;background:var(--blue);color:#fff;border-radius:6px;padding:6px 16px;
+    box-shadow:0 2px 0 #204c61;
+  }
+  .revealbtn:hover{filter:brightness(1.08)}
+  .doll.reveal .revealbtn{display:none}
+
+  .redbtn{
+    display:block;margin:24px auto 4px;width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle at 38% 32%,#e85b52,var(--red) 55%,var(--red-d));
+    border:5px solid #7c1a17;color:#fff;font:inherit;font-weight:900;font-size:1rem;
+    cursor:pointer;box-shadow:0 8px 18px -4px var(--shadow),inset 0 -6px 14px rgba(0,0,0,.25);
+    letter-spacing:.05em;transition:.1s;
+  }
+  .redbtn:active{transform:translateY(3px);box-shadow:0 3px 10px -4px var(--shadow),inset 0 -3px 10px rgba(0,0,0,.3)}
+
+  /* ---- how it works ---- */
+  details{border:1px solid var(--line);border-radius:8px;background:#fbf3dd;margin:12px 0;overflow:hidden}
+  summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸ ";color:var(--red)}
+  details[open] summary::before{content:"▾ "}
+  .details-body{padding:2px 18px 16px;font-size:.92rem;color:var(--ink2)}
+  code{background:#efe0bf;padding:1px 6px;border-radius:4px;font-size:.86em;color:var(--red-d)}
+  .flow{font-family:ui-monospace,"SFMono-Regular",Menlo,monospace;font-size:.82rem;background:#33291a;color:#f0e2c0;border-radius:8px;padding:14px 16px;overflow-x:auto;line-height:1.6;white-space:pre}
+
+  footer{text-align:center;color:var(--ink2);font-size:.82rem;margin-top:40px;line-height:1.9}
+  footer a{color:var(--red-d);text-decoration:none;border-bottom:1px dotted}
+  .note{font-size:.78rem;color:#8a7550;max-width:640px;margin:8px auto 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">SAM &amp; MAX · 換裝防拷 · 線上懷舊版</div>
+    <h1>妙探闖通關<small>大腳之謎 — 松崗台版防拷紙娃娃</small></h1>
+    <p class="sub">
+      1993 年 LucasArts《Sam &amp; Max Hit the Road》開機時,會要你翻開紙本說明書某一頁,
+      把山姆或麥斯打扮成插圖的樣子——答對才能進遊戲。手冊早已散佚?這裡用反組譯還原了
+      全部 10 頁的正確穿搭,並以原創手繪 SVG 紙娃娃重現當年的開機儀式。
+    </p>
+  </header>
+
+  <section class="panel">
+    <h2><span class="dot"></span>翻到手冊第幾頁?</h2>
+    <p class="lead">選一頁(1–10),看山姆與麥斯該怎麼穿。開「挑戰模式」則先遮住答案,考考你的記憶。</p>
+    <div class="pages" id="pages" role="tablist"></div>
+    <div class="controls">
+      <label class="toggle"><input type="checkbox" id="challenge"> 挑戰模式(先遮住答案)</label>
+    </div>
+    <p class="prompt" id="prompt"></p>
+    <div class="stage" id="stage"></div>
+    <button class="redbtn" id="redbtn" title="當年答對後按下的紅色大按鈕">紅色<br>大按鈕</button>
+    <p class="note" id="redmsg" style="text-align:center;min-height:1.4em"></p>
+  </section>
+
+  <section class="panel">
+    <h2><span class="dot"></span>這個防拷是怎麼運作的?</h2>
+    <p class="lead">以下由 SCUMM v6 反組譯(room 71)還原,非猜測。</p>
+    <details open>
+      <summary>開機流程與判定邏輯</summary>
+      <div class="details-body">
+        <p>遊戲開機進 <code>room 1</code>,若旗標 <code>bitvar223 == 0</code>(還沒通過防拷)就載入 <code>room 71</code> 換裝關卡:</p>
+        <div class="flow">room 71 開場:
+  var152 = 隨機(1..10)      → 手冊頁碼
+  var153 = 隨機(0..1)       → 0=山姆(狗)  1=麥斯(兔)
+  提示:「把 SAM/MAX 打扮成手冊第 N 頁的樣子,再按紅色大按鈕」
+
+按下紅色大按鈕(物件 771)時:
+  索引 = (var152-1)*6 + var153*3   // 每頁 6 字元:前 3 山姆、後 3 麥斯
+  由 60 字元的答案字串取出 3 件正確物件
+  → 那 3 件必須「穿上」,其餘全部「脫下」,才算對
+
+答錯一次:「再給你一次機會」
+答錯兩次:「bye-bye!」→ 直接關掉遊戲
+答對:「Have fun!」→ bitvar223 = 1,之後開機不再問</div>
+        <p style="margin-top:12px">答案來源是資料檔裡一條 60 字元字串
+        <code>array304</code>(每個字母 −65 得物件位移),涵蓋 10 頁 × 6 件,無缺漏。
+        本頁的穿搭資料即由它逐頁切分還原。</p>
+      </div>
+    </details>
+    <details>
+      <summary>物件編號如何對應身體 / 頭部 / 配件?</summary>
+      <div class="details-body">
+        <p>每個角色有一段連續物件編號,分三區:</p>
+        <ul>
+          <li><b>山姆(狗)</b>:身體 715–724、配件 725–735、頭部 736–744</li>
+          <li><b>麥斯(兔)</b>:身體 745–752、配件 753–762、頭部 763–770</li>
+        </ul>
+        <p>判定只看「這 3 個編號的物件是否穿上」,不管它落在哪一區,所以偶爾會出現「大鬍子」被歸在配件區之類的情形。下方每件穿搭都標了原始物件編號 <code>#id</code>。</p>
+        <p class="note" style="margin-left:0">部件的中文名為本專案依英文物件名翻譯(手冊只有插圖、無部件文字),僅供辨識;山姆、麥斯、遊戲名採松崗官方譯名。</p>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    原創手繪 SVG 紙娃娃,非遊戲美術素材 · 資料由 SCUMM 反組譯還原<br>
+    《妙探闖通關——大腳之謎》繁體中文化專案 ·
+    <a href="../README.md">← 回專案說明</a><br>
+    LucasArts 與 Sam &amp; Max 相關權利屬原權利人;本頁為非營利愛好者作品。
+  </footer>
+</div>
+
+<script>
+/* ================= 答案資料(反組譯還原,10 頁 × Sam/Max × 身體/頭部/配件) ================= */
+// key 用於挑選 SVG 圖示;zh 顯示名;en 英文物件名;id 物件編號
+const P = (zh,en,id,key)=>({zh,en,id,key});
+const PAGES = [
+ {p:1,
+  sam:{body:P("圍裙裝","apron",716,"apron"), head:P("牛仔帽","cowboy-hat",740,"cowboyhat"), acc:P("鋸子","saw",726,"saw")},
+  max:{body:P("金屬盔甲裝","metal",746,"metal"), head:P("新娘頭紗","veil",765,"veil"), acc:P("鬥牛披風","bull-cape",759,"cape")}},
+ {p:2,
+  sam:{body:P("刺青裝","tatooed",724,"tattoo"), head:P("探險帽","indy-hat",738,"fedora"), acc:P("熱狗","weenie",725,"hotdog")},
+  max:{body:P("披薩裝","dominos",750,"pizza"), head:P("泡泡糖頭","bubblegumhead",770,"bubblegum"), acc:P("鬧鐘","alarm-clock",762,"clock")}},
+ {p:3,
+  sam:{body:P("衝浪裝","surfer",723,"surf"), head:P("外科口罩","surgical-mask",737,"mask"), acc:P("烙鐵","brand",729,"brand")},
+  max:{body:P("潛水裝","scuba",752,"scuba"), head:P("龐克頭","punk-hair",764,"punk"), acc:P("瑞士刀","swiss-knife",753,"knife")}},
+ {p:4,
+  sam:{body:P("圍裙裝","apron",715,"apron"), head:P("睡帽","nightcap",742,"nightcap"), acc:P("牙膏","toothpaste",733,"toothpaste")},
+  max:{body:P("童軍裝","scout",745,"scout"), head:P("貝雷帽","beret",767,"beret"), acc:P("鬥牛劍","bull-sword",758,"sword")}},
+ {p:5,
+  sam:{body:P("盲人裝","blind-guy",719,"blind"), head:P("衝浪金髮","surf-hair",743,"surfhair"), acc:P("骷髏頭","skull",727,"skull")},
+  max:{body:P("新娘禮服","bridal",747,"bridal"), head:P("童軍帽","scout-hat",763,"scouthat"), acc:P("披薩切片","pizza-slice",760,"pizzaslice")}},
+ {p:6,
+  sam:{body:P("綠衣裝","greens",717,"greens"), head:P("大鬍子","beard",728,"beard"), acc:P("手杖","cane",731,"cane")},
+  max:{body:P("吸血鬼裝","vampire",748,"vampire"), head:P("披薩帽","pizza-cap",768,"pizzacap"), acc:P("吉他","guitar",754,"guitar")}},
+ {p:7,
+  sam:{body:P("掘墓人裝","graverobber",718,"grave"), head:P("高禮帽","top-hat",741,"tophat"), acc:P("劍","sword",735,"sword")},
+  max:{body:P("睡衣","pajamas",751,"pajamas"), head:P("南瓜頭","pumpkinhead",769,"pumpkin"), acc:P("雞","chicken",755,"chicken")}},
+ {p:8,
+  sam:{body:P("牛仔裝","cowboy",720,"cowboy"), head:P("廚師帽","chef-hat",736,"chefhat"), acc:P("手杖","cane",730,"cane")},
+  max:{body:P("鬥牛士裝","bullfighter",749,"bullfighter"), head:P("尖牙","fangs",766,"fangs"), acc:P("泰迪熊","teddy-bear",761,"teddy")}},
+ {p:9,
+  sam:{body:P("燕尾服","tuxedo",721,"tuxedo"), head:P("主教冠","mitre",744,"mitre"), acc:P("牙刷","toothbrush",732,"toothbrush")},
+  max:{body:P("新娘禮服","bridal",747,"bridal"), head:P("南瓜頭","pumpkinhead",769,"pumpkin"), acc:P("蝙蝠","vampire-bat",757,"bat")}},
+ {p:10,
+  sam:{body:P("睡衣","pajamas",722,"pajamas"), head:P("太陽眼鏡","sunglasses",739,"sunglasses"), acc:P("獎牌","medal",734,"medal")},
+  max:{body:P("睡衣","pajamas",751,"pajamas"), head:P("龐克頭","punk-hair",764,"punk"), acc:P("花束","bouquet",756,"bouquet")}},
+];
+
+/* ================= 原創 SVG 圖示庫(0 0 64 64) ================= */
+const stroke='#2b2317';
+const G=(inner)=>`<svg viewBox="0 0 64 64" width="100%" height="100%" fill="none" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const ICONS={
+ // ---- 頭部 ----
+ cowboyhat:G('<path d="M12 40c8-6 32-6 40 0" fill="#b07a3a"/><path d="M20 40c0-14 4-20 12-20s12 6 12 20" fill="#c99a3b"/>'),
+ fedora:G('<path d="M14 42c6-4 30-4 36 0" fill="#8a6a3a"/><path d="M22 42c0-12 2-18 10-18s10 6 10 18" fill="#a07d45"/><path d="M23 32h18" stroke="#5a4a2e"/>'),
+ tophat:G('<path d="M12 46c8-4 32-4 40 0" fill="#33291a"/><rect x="22" y="14" width="20" height="30" rx="2" fill="#2b2317"/><path d="M22 36h20" stroke="#c8302b"/>'),
+ chefhat:G('<path d="M20 44h24V32c6 0 8-6 3-10 2-6-4-10-9-7-3-5-11-4-12 2-6-1-9 6-4 10z" fill="#fbf6ec"/>'),
+ beret:G('<path d="M14 40c4-12 32-12 36 0 2 4-4 6-18 6s-20-2-18-6z" fill="#2f6f8f"/><circle cx="34" cy="24" r="2.5" fill="#2b2317"/>'),
+ veil:G('<path d="M20 22c0-8 24-8 24 0v6c8 6 8 26 4 32H16c-4-6-4-26 4-32z" fill="#f3ecf8" stroke-width="2"/><path d="M22 24h20" />'),
+ nightcap:G('<path d="M18 42c0-16 6-24 16-24 10 0 8 10 6 16l6 6z" fill="#5a6fb0"/><circle cx="46" cy="42" r="4" fill="#fbf6ec"/>'),
+ punk:G('<path d="M20 40c0-4 2-8 4-10M28 38c0-6 0-14 2-18M36 38c0-4 2-8 4-12M44 40c0-4-1-8-3-11" stroke="#c8302b" stroke-width="3"/><path d="M18 42c4-6 24-6 28 0z" fill="#2b2317"/>'),
+ surfhair:G('<path d="M16 40c2-14 12-20 22-16 8 3 10 10 8 18-4-6-10-8-16-6-4 1-10 4-14 4z" fill="#e0b84f"/>'),
+ scouthat:G('<path d="M10 42c8-5 36-5 44 0" fill="#5a7d3a"/><path d="M22 42l10-22 10 22" fill="#6f9245"/>'),
+ pizzacap:G('<path d="M14 44c6-16 30-16 36 0z" fill="#e0b84f"/><circle cx="26" cy="34" r="2.6" fill="#c8302b"/><circle cx="38" cy="30" r="2.6" fill="#c8302b"/><circle cx="34" cy="40" r="2.6" fill="#7a9a3a"/>'),
+ pumpkin:G('<path d="M16 32c0-10 32-10 32 0 0 14-6 22-16 22S16 46 16 32z" fill="#d98232"/><path d="M26 34l-4 4h6zM38 34l4 4h-6zM24 46c4 4 12 4 16 0" stroke="#5a3a1a"/><path d="M32 12v10" stroke="#5a7d3a" stroke-width="3"/>'),
+ chefhat2:G(''),
+ mask:G('<path d="M16 30c8-4 24-4 32 0v8c-8 5-24 5-32 0z" fill="#bfe0e8"/><path d="M16 32l-4-4M48 32l4-4"/>'),
+ mitre:G('<path d="M24 46V30c0-10 4-16 8-20 4 4 8 10 8 20v16z" fill="#e8dca0"/><path d="M32 12v34M24 34h16" stroke="#c8302b"/>'),
+ sunglasses:G('<path d="M12 30h40M18 30c-2 8 12 8 12 0M34 30c0 8 14 8 12 0" fill="#2b2317"/>'),
+ fangs:G('<path d="M18 26c8 6 20 6 28 0v6c-6 8-22 8-28 0z" fill="#f3ecf8"/><path d="M24 32l2 8 2-8M36 32l2 8 2-8" fill="#fff"/>'),
+ beard:G('<path d="M20 24h24v8c0 14-6 20-12 20s-12-6-12-20z" fill="#c9c2b4"/><path d="M26 24c0-4 12-4 12 0" stroke="#8a7550"/>'),
+ bubblegum:G('<circle cx="32" cy="30" r="12" fill="#e88fb0"/><circle cx="46" cy="40" r="6" fill="#f3b4cd"/>'),
+ // ---- 身體/服裝 ----
+ apron:G('<path d="M24 18h16v6l6 4v22H18V28l6-4z" fill="#fbf6ec"/><path d="M26 20v30M38 20v30" stroke="#cdbb90" stroke-width="1.6"/>'),
+ metal:G('<path d="M22 20h20v30H22z" fill="#b8bcc4"/><path d="M22 30h20M32 20v30" stroke="#7a8088"/><circle cx="27" cy="25" r="1.6" fill="#5a616a"/><circle cx="37" cy="25" r="1.6" fill="#5a616a"/>'),
+ tattoo:G('<path d="M24 18h16v32H24z" fill="#e7c9a0"/><path d="M28 26a4 4 0 108 0" stroke="#c8302b"/><path d="M30 40l4-4 4 4" stroke="#2f6f8f"/>'),
+ pizza:G('<path d="M18 46L32 16l14 30z" fill="#e0b84f"/><circle cx="30" cy="36" r="2.4" fill="#c8302b"/><circle cx="36" cy="40" r="2.4" fill="#c8302b"/><circle cx="33" cy="30" r="2.4" fill="#7a9a3a"/>'),
+ surf:G('<path d="M22 18h20v32H22z" fill="#2f9f8f"/><path d="M22 26q10 4 20 0M22 34q10 4 20 0M22 42q10 4 20 0" stroke="#fbf6ec" stroke-width="1.8"/>'),
+ scuba:G('<path d="M24 18h16v32H24z" fill="#2b2f3a"/><rect x="40" y="22" width="6" height="20" rx="2" fill="#f0d24a"/><circle cx="30" cy="30" r="4" fill="#bfe0e8"/>'),
+ scout:G('<path d="M24 18h16v32H24z" fill="#8a9a4a"/><path d="M24 24l8 6 8-6" stroke="#5a3a1a"/><circle cx="30" cy="38" r="1.8" fill="#c99a3b"/><circle cx="34" cy="42" r="1.8" fill="#c99a3b"/>'),
+ blind:G('<path d="M24 18h16v32H24z" fill="#6a6a6a"/><path d="M22 30l-6 20" stroke="#c99a3b" stroke-width="3"/>'),
+ bridal:G('<path d="M32 18c-4 0-6 4-6 8l-8 24h28l-8-24c0-4-2-8-6-8z" fill="#fbf6ec"/><path d="M26 34q6 4 12 0" stroke="#e0d4c0"/>'),
+ greens:G('<path d="M24 18h16v32H24z" fill="#4f8f4a"/><path d="M32 20v30" stroke="#3a6f37"/>'),
+ vampire:G('<path d="M24 18h16v32H24z" fill="#2b2317"/><path d="M24 18l8 10 8-10" stroke="#c8302b" stroke-width="2.6"/><path d="M32 28v22" stroke="#c8302b"/>'),
+ grave:G('<path d="M22 18h20v32H22z" fill="#4a4436"/><path d="M22 26l20 4M22 34l20 4" stroke="#2b2317"/>'),
+ pajamas:G('<path d="M24 18h16v32H24z" fill="#7fb0d0"/><path d="M28 18v32M36 18v32" stroke="#fbf6ec" stroke-width="1.6"/>'),
+ cowboy:G('<path d="M22 20h20v30H22z" fill="#9a6a3a"/><path d="M22 28h20" stroke="#5a3a1a"/><path d="M28 20l4 8 4-8" stroke="#e7c9a0"/>'),
+ bullfighter:G('<path d="M24 18h16v32H24z" fill="#c8302b"/><path d="M24 24l16 4M24 44l16-4" stroke="#f0d24a"/><circle cx="32" cy="34" r="3" fill="#f0d24a"/>'),
+ tuxedo:G('<path d="M24 18h16v32H24z" fill="#2b2317"/><path d="M32 18v32" stroke="#fbf6ec"/><path d="M28 20l4 8 4-8" fill="#fbf6ec" stroke="#fbf6ec"/><path d="M30 30l2 2 2-2" stroke="#c8302b" stroke-width="3"/>'),
+ // ---- 配件 ----
+ saw:G('<path d="M14 40h30l6-6" stroke="#8a7550" stroke-width="3"/><path d="M14 40l4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4" fill="none"/>'),
+ cape:G('<path d="M18 20c8 10 20 10 28 0-2 18-6 28-14 30-8-2-12-12-14-30z" fill="#c8302b"/>'),
+ hotdog:G('<rect x="12" y="28" width="40" height="10" rx="5" fill="#e0a95a"/><path d="M16 33h32" stroke="#c8302b" stroke-width="3"/><path d="M18 30q16 6 28 0" stroke="#f0d24a" stroke-width="2"/>'),
+ clock:G('<circle cx="32" cy="34" r="14" fill="#f0d24a"/><path d="M32 34V24M32 34l7 5" /><path d="M22 20l-4-4M42 20l4-4" stroke-width="3"/>'),
+ brand:G('<path d="M16 48l16-16" stroke="#8a7550" stroke-width="4"/><path d="M32 32a8 8 0 108 8" stroke="#c8302b" stroke-width="3"/>'),
+ knife:G('<path d="M20 44l16-16 8 8-16 16z" fill="#c33"/><path d="M28 36l8 8" stroke="#fbf6ec"/>'),
+ toothpaste:G('<path d="M18 44l20-20 4 4-20 20z" fill="#7fb0d0"/><path d="M38 24l4-4 4 4-4 4z" fill="#c8302b"/>'),
+ sword:G('<path d="M18 46L40 24" stroke="#c0c4cc" stroke-width="4"/><path d="M36 20l8 8M40 24l-6 6" /><path d="M28 32l4 4" stroke-width="4"/>'),
+ skull:G('<path d="M20 28c0-10 24-10 24 0 0 6-2 8-4 10v6H24v-6c-2-2-4-4-4-10z" fill="#fbf6ec"/><circle cx="27" cy="30" r="2.4" fill="#2b2317"/><circle cx="37" cy="30" r="2.4" fill="#2b2317"/>'),
+ pizzaslice:G('<path d="M16 44L32 18l16 26z" fill="#e0b84f"/><path d="M16 44h32" stroke="#c99a3b" stroke-width="3"/><circle cx="30" cy="36" r="2.2" fill="#c8302b"/><circle cx="36" cy="38" r="2.2" fill="#c8302b"/>'),
+ cane:G('<path d="M26 18c8 0 8 8 8 12v22" stroke="#8a6a3a" stroke-width="4"/>'),
+ guitar:G('<path d="M28 40a9 9 0 109 9c5 0 6-6 6-12l6-16" stroke-width="2.6"/><circle cx="30" cy="46" r="5" fill="#9a6a3a"/><path d="M43 21l4 4" stroke-width="3"/>'),
+ chicken:G('<path d="M24 34c-4 0-8 4-8 10 0 6 6 8 12 8s12-4 12-12c0-6-4-10-8-10z" fill="#fbf6ec"/><path d="M30 26c0-4 6-6 8-2 4-2 6 4 2 6" fill="#f0d24a"/><path d="M38 30l6 2" stroke="#e0a95a"/><circle cx="34" cy="30" r="1.6" fill="#2b2317"/>'),
+ teddy:G('<circle cx="32" cy="38" r="12" fill="#b07a3a"/><circle cx="24" cy="24" r="4" fill="#b07a3a"/><circle cx="40" cy="24" r="4" fill="#b07a3a"/><circle cx="29" cy="36" r="1.8" fill="#2b2317"/><circle cx="35" cy="36" r="1.8" fill="#2b2317"/>'),
+ toothbrush:G('<path d="M18 46l22-22" stroke="#7fb0d0" stroke-width="4"/><path d="M40 24l4-4M43 27l4-4" stroke="#fbf6ec" stroke-width="2.4"/>'),
+ bat:G('<path d="M32 30c-6-8-14-8-18-2 6 0 8 4 8 8 4-4 8-4 10-2 2-2 6-2 10 2 0-4 2-8 8-8-4-6-12-6-18 2z" fill="#2b2317"/>'),
+ medal:G('<path d="M26 16l6 12 6-12" stroke="#c8302b" stroke-width="3"/><circle cx="32" cy="40" r="11" fill="#f0d24a"/><path d="M32 34l1.8 4h4l-3 2.6 1 4-3.8-2.4-3.8 2.4 1-4-3-2.6h4z" fill="#c99a3b" stroke="none"/>'),
+ bouquet:G('<circle cx="26" cy="24" r="5" fill="#e88fb0"/><circle cx="38" cy="22" r="5" fill="#f0d24a"/><circle cx="32" cy="30" r="5" fill="#c8302b"/><path d="M30 32l-6 18M34 32l6 18" stroke="#5a7d3a" stroke-width="3"/>'),
+};
+function icon(key){ return ICONS[key] || G('<rect x="20" y="20" width="24" height="24" rx="4" fill="#e6d3a6"/><path d="M26 32h12M32 26v12"/>'); }
+
+/* ================= 娃娃底圖(山姆=狗、麥斯=兔) ================= */
+function samDoll(){return `
+<svg viewBox="0 0 100 130" width="100%" height="100%">
+ <g stroke="#2b2317" stroke-width="2.2" stroke-linejoin="round">
+  <!-- 身體:灰白襯衫 + 領帶 -->
+  <path d="M30 72c0-8 40-8 40 0v46H30z" fill="#eee9dd"/>
+  <path d="M50 72l-6 8 6 30 6-30-6-8z" fill="#c8302b" stroke-width="1.6"/>
+  <!-- 手 -->
+  <path d="M30 80c-8 4-10 14-8 24" fill="#eee9dd"/>
+  <path d="M70 80c8 4 10 14 8 24" fill="#eee9dd"/>
+  <!-- 狗頭 -->
+  <ellipse cx="50" cy="42" rx="22" ry="20" fill="#c9a86a"/>
+  <path d="M28 34c-8-2-10 10-4 18 4-2 8-6 8-10z" fill="#a9884a"/>
+  <path d="M72 34c8-2 10 10 4 18-4-2-8-6-8-10z" fill="#a9884a"/>
+  <ellipse cx="50" cy="52" rx="10" ry="8" fill="#efe6d2"/>
+  <ellipse cx="50" cy="47" rx="4" ry="3" fill="#2b2317" stroke="none"/>
+  <circle cx="43" cy="38" r="2.4" fill="#2b2317" stroke="none"/>
+  <circle cx="57" cy="38" r="2.4" fill="#2b2317" stroke="none"/>
+  <path d="M50 51v5M44 57q6 4 12 0" stroke-width="1.8"/>
+ </g>
+</svg>`;}
+function maxDoll(){return `
+<svg viewBox="0 0 100 130" width="100%" height="100%">
+ <g stroke="#2b2317" stroke-width="2.2" stroke-linejoin="round">
+  <path d="M32 74c0-6 36-6 36 0v44H32z" fill="#fbf6ec"/>
+  <path d="M32 82c-8 4-9 14-6 22" fill="#fbf6ec"/>
+  <path d="M68 82c8 4 9 14 6 22" fill="#fbf6ec"/>
+  <!-- 兔耳 -->
+  <path d="M40 30c-4-16 2-24 4-24s4 10 2 24z" fill="#fbf6ec"/>
+  <path d="M60 30c4-16-2-24-4-24s-4 10-2 24z" fill="#fbf6ec"/>
+  <!-- 兔頭 -->
+  <ellipse cx="50" cy="48" rx="20" ry="18" fill="#fbf6ec"/>
+  <circle cx="42" cy="44" r="2.6" fill="#2b2317" stroke="none"/>
+  <circle cx="58" cy="44" r="2.6" fill="#2b2317" stroke="none"/>
+  <!-- 大嘴利牙 -->
+  <path d="M36 54q14 16 28 0z" fill="#c8302b"/>
+  <path d="M44 58l2 6 2-6M52 58l2 6 2-6" fill="#fff" stroke="#fff" stroke-width="1"/>
+ </g>
+</svg>`;}
+
+/* ================= 渲染 ================= */
+let cur=1;
+const pagesEl=document.getElementById('pages');
+const stageEl=document.getElementById('stage');
+const promptEl=document.getElementById('prompt');
+const chEl=document.getElementById('challenge');
+const redMsg=document.getElementById('redmsg');
+
+PAGES.forEach(pg=>{
+  const b=document.createElement('button');
+  b.className='pgbtn';b.textContent=pg.p;b.setAttribute('role','tab');
+  b.onclick=()=>{cur=pg.p;render();};
+  pagesEl.appendChild(b);
+});
+
+function chip(part,slot){
+  return `<div class="chip">
+    <div class="ic">${icon(part.key)}</div>
+    <div class="tx"><b>${part.zh}</b> <span class="en">${part.en} · #${part.id}</span></div>
+    <span class="slot">${slot}</span>
+  </div>`;
+}
+function dollCard(who,en,dollSvg,data){
+  return `<div class="doll" data-who="${who}">
+    <div class="who">${who} <span>${en}</span></div>
+    <div class="figure">${dollSvg}</div>
+    <div class="parts">
+      ${chip(data.body,'身體')}
+      ${chip(data.head,'頭部')}
+      ${chip(data.acc,'配件')}
+    </div>
+    <button class="revealbtn">看答案 ▶</button>
+  </div>`;
+}
+function render(){
+  const pg=PAGES[cur-1];
+  Array.from(pagesEl.children).forEach((b,i)=>b.setAttribute('aria-selected', i+1===cur));
+  const challenge=chEl.checked;
+  promptEl.innerHTML= challenge
+    ? `請回想:手冊 <b>第 ${cur} 頁</b>,山姆與麥斯各該怎麼穿?按「看答案」揭曉。`
+    : `手冊 <b>第 ${cur} 頁</b> 的正確穿搭如下,三件全部穿上、其餘脫下,即通過防拷。`;
+  stageEl.innerHTML = dollCard('山姆','Sam · 狗',samDoll(),pg.sam)
+                    + dollCard('麥斯','Max · 兔',maxDoll(),pg.max);
+  stageEl.querySelectorAll('.doll').forEach(d=>{
+    d.classList.toggle('reveal', !challenge);
+    d.querySelector('.revealbtn').onclick=()=>d.classList.add('reveal');
+  });
+  stageEl.classList.toggle('hidden-ans', challenge);
+  redMsg.textContent='';
+}
+chEl.onchange=render;
+
+const redbtn=document.getElementById('redbtn');
+const cheers=['Have fun! — 答對了,歡迎進入妙探闖通關 🐶🐰','正確!bitvar223 = 1,以後開機不再問。','過關!當年這一按,才總算能開始玩。'];
+let ci=0;
+redbtn.onclick=()=>{
+  // 揭曉所有答案並給正向回饋(懷舊版不真的擋人)
+  stageEl.querySelectorAll('.doll').forEach(d=>d.classList.add('reveal'));
+  redMsg.textContent=cheers[ci++%cheers.length];
+};
+
+render();
+</script>
+</body>
+</html>
