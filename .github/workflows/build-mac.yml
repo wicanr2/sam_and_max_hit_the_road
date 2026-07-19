@@ -1,0 +1,150 @@
+name: Build macOS (patched ScummVM, universal)
+
+# 產出:含中文化 whitelist patch 的 ScummVM 2.8.0 macOS universal (.app)。
+# 只 build 空殼(不含遊戲版權檔)——下載 artifact 後在本機注入遊戲 + 中文字型。
+# 依 mac-app-cross-pack SOP:per-arch native build + lipo,手動 bundle SDL2。
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['mac-build-*']
+
+jobs:
+  build:
+    runs-on: macos-14        # Apple Silicon (M1)
+    timeout-minutes: 90
+    env:
+      SDL_VER: "2.28.5"
+      MIN: "11.0"
+      SCUMMVM_TAG: "v2.8.0"
+    steps:
+      - name: Checkout patch repo
+        uses: actions/checkout@v4
+        with:
+          path: cht
+
+      - name: Clone pristine ScummVM 2.8.0 + apply CHT patch
+        run: |
+          set -e
+          git clone --depth 1 --branch "$SCUMMVM_TAG" https://github.com/scummvm/scummvm.git scummvm
+          cd scummvm
+          git apply -v ../cht/patches/scummvm-samnmax-zh-chn-whitelist.patch
+          echo "== patched charset.cpp =="
+          grep -n GID_SAMNMAX engines/scumm/charset.cpp
+
+      - name: Build SDL2 (per-arch, from source)
+        run: |
+          set -e
+          ts(){ date +%H:%M:%S; }
+          curl -LO "https://www.libsdl.org/release/SDL2-${SDL_VER}.tar.gz"
+          build_sdl () {
+            local ARCH=$1 PREFIX=$2 RUN=$3
+            echo "[$(ts)] SDL2 $ARCH configure"
+            rm -rf "SDL2-${SDL_VER}-$ARCH" && tar xzf "SDL2-${SDL_VER}.tar.gz"
+            mv "SDL2-${SDL_VER}" "SDL2-${SDL_VER}-$ARCH"
+            pushd "SDL2-${SDL_VER}-$ARCH" >/dev/null
+            $RUN /bin/bash -c "CFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
+              LDFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
+              ./configure --prefix='$PREFIX' --disable-shared --enable-static >/dev/null 2>&1 || \
+              CFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
+              LDFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
+              ./configure --prefix='$PREFIX' --enable-shared"
+            echo "[$(ts)] SDL2 $ARCH make"
+            $RUN /bin/bash -c "make -j\$(sysctl -n hw.ncpu) >/dev/null && make install >/dev/null"
+            popd >/dev/null
+            echo "[$(ts)] SDL2 $ARCH done"
+          }
+          build_sdl arm64  "$PWD/sdl-arm64"  ""
+          build_sdl x86_64 "$PWD/sdl-x86_64" "arch -x86_64"
+
+      - name: Build ScummVM (per-arch) + lipo
+        run: |
+          set -e
+          ts(){ date +%H:%M:%S; }
+          SRC="$PWD/scummvm"
+          build_svm () {
+            local ARCH=$1 PREFIX=$2 RUN=$3 OUT=$4
+            echo "[$(ts)] scummvm $ARCH configure"
+            rm -rf "build-$ARCH" && cp -R "$SRC" "build-$ARCH"
+            pushd "build-$ARCH" >/dev/null
+            # ScummVM configure 非 autoconf:flags 只能走環境變數前綴
+            $RUN /bin/bash -c "CXXFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
+              CPPFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
+              LDFLAGS='-arch $ARCH -mmacosx-version-min=$MIN' \
+              ./configure --backend=sdl --with-sdl-prefix='$PREFIX' \
+                          --disable-all-engines --enable-engine=scumm \
+                          --enable-release --disable-debug \
+                          --disable-eventrecorder"
+            echo "[$(ts)] scummvm $ARCH make"
+            $RUN /bin/bash -c "make -j\$(sysctl -n hw.ncpu)"
+            cp scummvm "$OUT"
+            echo "[$(ts)] scummvm $ARCH done ($(lipo -info "$OUT"))"
+            popd >/dev/null
+          }
+          build_svm arm64  "$PWD/sdl-arm64"  ""              "$PWD/scummvm-arm64"
+          build_svm x86_64 "$PWD/sdl-x86_64" "arch -x86_64"  "$PWD/scummvm-x86_64"
+          echo "[$(ts)] lipo merge"
+          lipo -create scummvm-arm64 scummvm-x86_64 -output scummvm-universal
+          lipo -info scummvm-universal
+
+      - name: Assemble .app bundle (make bundle skeleton + universal binary)
+        run: |
+          set -e
+          cd build-arm64
+          # make bundle 產 ScummVM.app 骨架(GUI 主題 / 引擎資料進 Resources)
+          make bundle || make bundle/macosx || true
+          APP=$(ls -d *.app 2>/dev/null | head -1)
+          if [ -z "$APP" ]; then
+            echo "make bundle 沒產 .app,手動建骨架"
+            APP="ScummVM.app"
+            mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+            cp ../scummvm/dists/macosx/Info.plist "$APP/Contents/Info.plist" 2>/dev/null || true
+            # 複製 runtime 資料檔(themes / 引擎 dat)
+            for f in gui/themes/*.zip gui/themes/*.dat dists/engine-data/* dists/networking/* ; do
+              [ -f "$f" ] && cp "$f" "$APP/Contents/Resources/" 2>/dev/null || true
+            done
+          fi
+          echo "APP=$APP"
+          # 換上 universal binary
+          cp ../scummvm-universal "$APP/Contents/MacOS/scummvm"
+          chmod +x "$APP/Contents/MacOS/scummvm"
+          # ---- bundle SDL2:lipo 兩弧 dylib(§1.5 手動 bundle,別用 dylibbundler)----
+          mkdir -p "$APP/Contents/Frameworks"
+          A="../sdl-arm64/lib/libSDL2-2.0.0.dylib"; X="../sdl-x86_64/lib/libSDL2-2.0.0.dylib"
+          if [ -f "$A" ] && [ -f "$X" ]; then
+            lipo -create "$A" "$X" -output "$APP/Contents/Frameworks/libSDL2-2.0.0.dylib"
+            install_name_tool -id "@executable_path/../Frameworks/libSDL2-2.0.0.dylib" \
+              "$APP/Contents/Frameworks/libSDL2-2.0.0.dylib"
+            # 把主 binary 兩弧各自的 SDL 路徑改指到 Frameworks
+            for P in "$(cd ..; pwd)/sdl-arm64/lib/libSDL2-2.0.0.dylib" "$(cd ..; pwd)/sdl-x86_64/lib/libSDL2-2.0.0.dylib"; do
+              install_name_tool -change "$P" "@executable_path/../Frameworks/libSDL2-2.0.0.dylib" \
+                "$APP/Contents/MacOS/scummvm" 2>/dev/null || true
+            done
+          else
+            echo "(SDL2 為靜態連結,不需 bundle dylib)"
+          fi
+          # ad-hoc 重簽(install_name_tool 改過必簽)
+          codesign --force --deep --sign - "$APP/Contents/Frameworks/libSDL2-2.0.0.dylib" 2>/dev/null || true
+          codesign --force --sign - "$APP/Contents/MacOS/scummvm" || true
+          echo "== 驗證 =="
+          lipo -info "$APP/Contents/MacOS/scummvm"
+          otool -L "$APP/Contents/MacOS/scummvm" | grep -i sdl || true
+          mv "$APP" ../ScummVM-cht.app
+
+      - name: Package (.tar.gz + .dmg)
+        run: |
+          set -e
+          tar czf ScummVM-cht-mac-universal.tar.gz ScummVM-cht.app
+          hdiutil create -volname "ScummVM-cht" -srcfolder ScummVM-cht.app \
+                         -ov -format UDZO ScummVM-cht-mac.dmg || true
+          ls -lh ScummVM-cht-mac-universal.tar.gz ScummVM-cht-mac.dmg 2>/dev/null || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scummvm-cht-mac
+          path: |
+            ScummVM-cht-mac-universal.tar.gz
+            ScummVM-cht-mac.dmg
+          retention-days: 7
+          if-no-files-found: warn
