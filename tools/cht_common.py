@@ -93,5 +93,7 @@ def is_cjk_char(ch):
         0x3400 <= cp <= 0x4DBF or      # Extension A
         0x3000 <= cp <= 0x303F or      # CJK 標點（。「」『』、…等）
         0xFF00 <= cp <= 0xFFEF or      # 全形英數與標點
+        cp == 0x30FB or                # ・ 片假名中點：人名間隔號（字形居中，優於 U+00B7）
+        0x00A0 <= cp <= 0x00FF or      # latin-1 補充：外語殘留字（Flambé 的 é、原文 ëëë 等）
         cp in (0x2014, 0x2026)         # —（破折號）、…（刪節號，部分字型放在 U+2026）
     )
