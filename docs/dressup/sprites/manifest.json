@@ -1,0 +1,580 @@
+{
+ "stage": {
+  "w": 320,
+  "h": 200,
+  "bg": "stage_bg.png"
+ },
+ "trans_index": 5,
+ "objects": [
+  {
+   "id": 715,
+   "x": 64,
+   "y": 80,
+   "w": 72,
+   "h": 80,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_715.png"
+  },
+  {
+   "id": 716,
+   "x": 56,
+   "y": 80,
+   "w": 88,
+   "h": 88,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_716.png"
+  },
+  {
+   "id": 717,
+   "x": 64,
+   "y": 80,
+   "w": 88,
+   "h": 96,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_717.png"
+  },
+  {
+   "id": 718,
+   "x": 48,
+   "y": 72,
+   "w": 104,
+   "h": 104,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_718.png"
+  },
+  {
+   "id": 719,
+   "x": 48,
+   "y": 80,
+   "w": 96,
+   "h": 88,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_719.png"
+  },
+  {
+   "id": 720,
+   "x": 48,
+   "y": 80,
+   "w": 104,
+   "h": 96,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_720.png"
+  },
+  {
+   "id": 721,
+   "x": 48,
+   "y": 80,
+   "w": 96,
+   "h": 80,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_721.png"
+  },
+  {
+   "id": 722,
+   "x": 48,
+   "y": 80,
+   "w": 104,
+   "h": 96,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_722.png"
+  },
+  {
+   "id": 723,
+   "x": 24,
+   "y": 48,
+   "w": 120,
+   "h": 128,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_723.png"
+  },
+  {
+   "id": 724,
+   "x": 56,
+   "y": 80,
+   "w": 88,
+   "h": 80,
+   "doll": "sam",
+   "zone": "body",
+   "file": "obj_724.png"
+  },
+  {
+   "id": 725,
+   "x": 128,
+   "y": 72,
+   "w": 48,
+   "h": 64,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_725.png"
+  },
+  {
+   "id": 726,
+   "x": 112,
+   "y": 104,
+   "w": 48,
+   "h": 56,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_726.png"
+  },
+  {
+   "id": 727,
+   "x": 40,
+   "y": 112,
+   "w": 40,
+   "h": 56,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_727.png"
+  },
+  {
+   "id": 728,
+   "x": 80,
+   "y": 64,
+   "w": 56,
+   "h": 40,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_728.png"
+  },
+  {
+   "id": 729,
+   "x": 104,
+   "y": 104,
+   "w": 56,
+   "h": 56,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_729.png"
+  },
+  {
+   "id": 730,
+   "x": 120,
+   "y": 112,
+   "w": 40,
+   "h": 64,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_730.png"
+  },
+  {
+   "id": 731,
+   "x": 120,
+   "y": 64,
+   "w": 40,
+   "h": 112,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_731.png"
+  },
+  {
+   "id": 732,
+   "x": 120,
+   "y": 104,
+   "w": 40,
+   "h": 48,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_732.png"
+  },
+  {
+   "id": 733,
+   "x": 40,
+   "y": 104,
+   "w": 40,
+   "h": 56,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_733.png"
+  },
+  {
+   "id": 734,
+   "x": 80,
+   "y": 80,
+   "w": 40,
+   "h": 24,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_734.png"
+  },
+  {
+   "id": 735,
+   "x": 128,
+   "y": 96,
+   "w": 32,
+   "h": 40,
+   "doll": "sam",
+   "zone": "acc",
+   "file": "obj_735.png"
+  },
+  {
+   "id": 736,
+   "x": 80,
+   "y": 32,
+   "w": 40,
+   "h": 40,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_736.png"
+  },
+  {
+   "id": 737,
+   "x": 80,
+   "y": 48,
+   "w": 48,
+   "h": 40,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_737.png"
+  },
+  {
+   "id": 738,
+   "x": 72,
+   "y": 48,
+   "w": 48,
+   "h": 24,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_738.png"
+  },
+  {
+   "id": 739,
+   "x": 80,
+   "y": 56,
+   "w": 40,
+   "h": 16,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_739.png"
+  },
+  {
+   "id": 740,
+   "x": 56,
+   "y": 40,
+   "w": 80,
+   "h": 40,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_740.png"
+  },
+  {
+   "id": 741,
+   "x": 72,
+   "y": 32,
+   "w": 56,
+   "h": 32,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_741.png"
+  },
+  {
+   "id": 742,
+   "x": 72,
+   "y": 40,
+   "w": 40,
+   "h": 32,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_742.png"
+  },
+  {
+   "id": 743,
+   "x": 72,
+   "y": 40,
+   "w": 56,
+   "h": 40,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_743.png"
+  },
+  {
+   "id": 744,
+   "x": 80,
+   "y": 24,
+   "w": 40,
+   "h": 48,
+   "doll": "sam",
+   "zone": "head",
+   "file": "obj_744.png"
+  },
+  {
+   "id": 745,
+   "x": 200,
+   "y": 112,
+   "w": 56,
+   "h": 48,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_745.png"
+  },
+  {
+   "id": 746,
+   "x": 176,
+   "y": 112,
+   "w": 104,
+   "h": 64,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_746.png"
+  },
+  {
+   "id": 747,
+   "x": 176,
+   "y": 104,
+   "w": 104,
+   "h": 72,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_747.png"
+  },
+  {
+   "id": 748,
+   "x": 184,
+   "y": 112,
+   "w": 96,
+   "h": 48,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_748.png"
+  },
+  {
+   "id": 749,
+   "x": 184,
+   "y": 112,
+   "w": 96,
+   "h": 56,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_749.png"
+  },
+  {
+   "id": 750,
+   "x": 200,
+   "y": 104,
+   "w": 96,
+   "h": 64,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_750.png"
+  },
+  {
+   "id": 751,
+   "x": 176,
+   "y": 112,
+   "w": 104,
+   "h": 64,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_751.png"
+  },
+  {
+   "id": 752,
+   "x": 184,
+   "y": 88,
+   "w": 96,
+   "h": 80,
+   "doll": "max",
+   "zone": "body",
+   "file": "obj_752.png"
+  },
+  {
+   "id": 753,
+   "x": 232,
+   "y": 120,
+   "w": 72,
+   "h": 40,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_753.png"
+  },
+  {
+   "id": 754,
+   "x": 192,
+   "y": 112,
+   "w": 128,
+   "h": 48,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_754.png"
+  },
+  {
+   "id": 755,
+   "x": 216,
+   "y": 112,
+   "w": 72,
+   "h": 56,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_755.png"
+  },
+  {
+   "id": 756,
+   "x": 232,
+   "y": 112,
+   "w": 48,
+   "h": 40,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_756.png"
+  },
+  {
+   "id": 757,
+   "x": 168,
+   "y": 104,
+   "w": 56,
+   "h": 40,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_757.png"
+  },
+  {
+   "id": 758,
+   "x": 176,
+   "y": 120,
+   "w": 96,
+   "h": 48,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_758.png"
+  },
+  {
+   "id": 759,
+   "x": 160,
+   "y": 120,
+   "w": 56,
+   "h": 56,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_759.png"
+  },
+  {
+   "id": 760,
+   "x": 184,
+   "y": 120,
+   "w": 32,
+   "h": 40,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_760.png"
+  },
+  {
+   "id": 761,
+   "x": 224,
+   "y": 104,
+   "w": 48,
+   "h": 56,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_761.png"
+  },
+  {
+   "id": 762,
+   "x": 176,
+   "y": 112,
+   "w": 48,
+   "h": 40,
+   "doll": "max",
+   "zone": "acc",
+   "file": "obj_762.png"
+  },
+  {
+   "id": 763,
+   "x": 192,
+   "y": 80,
+   "w": 72,
+   "h": 56,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_763.png"
+  },
+  {
+   "id": 764,
+   "x": 192,
+   "y": 64,
+   "w": 72,
+   "h": 64,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_764.png"
+  },
+  {
+   "id": 765,
+   "x": 192,
+   "y": 80,
+   "w": 64,
+   "h": 40,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_765.png"
+  },
+  {
+   "id": 766,
+   "x": 208,
+   "y": 104,
+   "w": 40,
+   "h": 16,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_766.png"
+  },
+  {
+   "id": 767,
+   "x": 208,
+   "y": 80,
+   "w": 40,
+   "h": 24,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_767.png"
+  },
+  {
+   "id": 768,
+   "x": 200,
+   "y": 72,
+   "w": 40,
+   "h": 24,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_768.png"
+  },
+  {
+   "id": 769,
+   "x": 208,
+   "y": 80,
+   "w": 48,
+   "h": 40,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_769.png"
+  },
+  {
+   "id": 770,
+   "x": 208,
+   "y": 88,
+   "w": 40,
+   "h": 32,
+   "doll": "max",
+   "zone": "head",
+   "file": "obj_770.png"
+  },
+  {
+   "id": 771,
+   "x": 152,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "doll": null,
+   "zone": null,
+   "file": "obj_771.png"
+  }
+ ]
+}

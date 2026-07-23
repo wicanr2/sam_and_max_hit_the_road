@@ -160,9 +160,11 @@
 
 `scummtr`（dwatteau，MIT）匯出 → 翻譯 → 編碼 → 回填，全程 byte 級可逆。回填前先做「原封不動回填 → diff=0」的 round-trip 驗證可逆，再動文字；引擎行為一律以 descumm 反組譯與 headless 實機截圖為 oracle，不憑記憶斷言。
 
-### 6. 防拷：反組譯還原成線上紙娃娃
+### 6. 防拷：反組譯還原成可玩換裝小遊戲
 
-`descumm` 反組譯 room 71 的判定腳本（Script #202–204）後可知：答案表 `array304` 是一段 60 字元的 XOR 資料，每頁 6 字元（前 3 個 Sam、後 3 個 Max），對應物件編號 `(字元 − 65) + 基址`（Sam 基址 715、Max 745）。順著這條式子把 10 頁答案全部解出，再對照手冊掃描插圖驗證無誤，就成了下一節那頁互動網頁的資料來源。
+`descumm` 反組譯 room 71 的判定腳本（Script #202–204）後可知：答案表 `array304` 是一段 60 字元的 XOR 資料，每頁 6 字元（前 3 個 Sam、後 3 個 Max），對應物件編號 `(字元 − 65) + 基址`（Sam 基址 715、Max 745）。順著這條式子把 10 頁答案全部解出，再對照手冊掃描插圖驗證無誤。
+
+娃娃與衣物則直接從遊戲資料檔抽出：room 71 的物件 `715–770` 各是一張 `OBIM → IM01 → SMAP` 分條點陣圖，用 ScummVM 引擎的解碼規則（`drawStripBasicV` 與 major-minor 兩種 codec，見 `tools/extract_dressup_sprites.py`）逐條還原、套 room 調色盤輸出成去背 PNG。每個物件自帶畫面座標，疊回背景時天生對位，於是就能在網頁上重現當年那道換裝關卡。
 
 完整工程規格見 [`docs/engineering-spec.md`](docs/engineering-spec.md)。
 
@@ -173,13 +175,13 @@
 <p align="center">
   <img src="docs/img/paper-doll-web.png" width="560" alt="線上防拷紙娃娃網頁">
 </p>
-<p align="center"><sub>10 頁換裝答案，反組譯還原成一頁互動網頁——手冊掉了也能過關。</sub></p>
+<p align="center"><sub>10 頁換裝答案，反組譯還原成一頁可玩小遊戲——手冊掉了也能過關。</sub></p>
 
 **線上懷舊：<https://wicanr2.github.io/sam_and_max_hit_the_road/>**
 
 **預告片：[▶ 在 YouTube 觀看繁體中文版預告片](https://youtu.be/ITJVSq5koXM)**
 
-遊戲叫你翻到第 N 頁，你就在這頁選第 N 頁；山姆與麥斯該穿的服裝、配件、頭飾會標出來，照著在遊戲裡穿好、按紅色大按鈕即可。全部用原創手繪 SVG，資料出自上一節的反組譯還原（[`docs/copy-protection-answers.md`](docs/copy-protection-answers.md)）。
+翻到第 N 頁，用 ◀ ▶ 幫山姆和麥斯換上身體、頭部、配件，湊成右邊「正解」再按紅色大按鈕——就跟當年開機那道換裝防拷一模一樣（答錯還有第二次機會，再錯就「bye-bye!」）。娃娃底圖、56 件衣物與紅色大按鈕全是從遊戲資料檔 `SAMNMAX.001`（room 71）解碼抽出的**原版美術**，用於還原並紀錄這道經典關卡；答案資料出自上一節的反組譯（[`docs/copy-protection-answers.md`](docs/copy-protection-answers.md)）。美術著作權屬 LucasArts / Lucasfilm 及其現權利人，此處為非營利、教育與保存性質之引用。
 
 > 部署提醒：需在 repo Settings → Pages 指定由 `docs/` 發佈後生效。
 
